@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rate your experience | B&amp;U Natural Hair</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b1411;
+    --espresso:#0f1b17;
+    --espresso-2:#15251f;
+    --bronze:#d4a089;
+    --bronze-light:#efc7b0;
+    --champagne:#f4ede4;
+    --paper:#fbf7f1;
+    --star:#e8b66b;
+    --ink-soft:rgba(244,237,228,0.68);
+    --hair:'Cormorant Garamond', Georgia, serif;
+    --body:'Jost', system-ui, sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{min-height:100%}
+  body{
+    background:radial-gradient(1200px 600px at 50% -10%, #14392c 0%, var(--ink) 60%);
+    color:var(--champagne);font-family:var(--body);line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    display:flex;align-items:center;justify-content:center;
+    padding:max(24px,env(safe-area-inset-top)) 18px max(24px,env(safe-area-inset-bottom));
+  }
+  .card{
+    width:100%;max-width:520px;text-align:center;
+    background:rgba(21,37,31,.72);border:1px solid rgba(212,160,137,.25);
+    padding:44px 30px 36px;
+    box-shadow:0 30px 70px rgba(0,0,0,.4);
+  }
+  .logo{font-family:var(--hair);font-size:22px;letter-spacing:.06em;display:flex;flex-direction:column;line-height:1.05;align-items:center;margin-bottom:30px}
+  .logo b{font-weight:700}
+  .logo span{font-family:var(--body);font-size:9px;letter-spacing:.32em;color:var(--bronze-light);font-weight:700;margin-top:5px}
+  .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--bronze-light);font-weight:700}
+  h1{font-family:var(--hair);font-weight:600;font-size:clamp(30px,7vw,40px);line-height:1.12;margin:10px 0 12px;color:var(--paper)}
+  p.sub{color:var(--ink-soft);font-size:15px;max-width:380px;margin:0 auto}
+
+  .stars{display:flex;justify-content:center;gap:6px;margin:30px 0 8px}
+  .star{
+    background:none;border:0;cursor:pointer;padding:4px;line-height:0;
+    color:rgba(244,237,228,.22);transition:transform .15s ease,color .15s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .star svg{width:clamp(42px,12vw,56px);height:clamp(42px,12vw,56px);fill:currentColor}
+  .star.on{color:var(--star)}
+  .star:hover{transform:scale(1.12)}
+  .star:focus-visible{outline:2px solid var(--bronze-light);outline-offset:2px;border-radius:6px}
+  .hint{min-height:22px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--bronze-light);font-weight:600}
+
+  .screen{display:none}
+  .screen.active{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:16px 28px;font:700 13px var(--body);letter-spacing:.06em;text-transform:uppercase;
+    border-radius:2px;border:0;cursor:pointer;text-decoration:none;
+    background:var(--bronze);color:var(--ink);transition:background .25s,transform .25s;
+  }
+  .btn:hover{background:var(--bronze-light);transform:translateY(-2px)}
+  .btn[disabled]{opacity:.55;cursor:wait;transform:none}
+  .btn-block{width:100%}
+  .link{background:none;border:0;color:var(--ink-soft);font:500 13px var(--body);text-decoration:underline;text-underline-offset:3px;cursor:pointer;margin-top:18px}
+  .link:hover{color:var(--champagne)}
+
+  .spinner{width:34px;height:34px;border:3px solid rgba(244,237,228,.2);border-top-color:var(--bronze);border-radius:50%;margin:26px auto 18px;animation:spin .9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  form{display:grid;gap:14px;text-align:left;margin-top:26px}
+  label{display:grid;gap:6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--bronze-light)}
+  label small{font-weight:500;letter-spacing:.04em;text-transform:none;color:var(--ink-soft);font-size:12px}
+  input,textarea{
+    width:100%;background:var(--espresso);border:1px solid rgba(244,237,228,.18);border-radius:0;
+    padding:14px;color:var(--paper);font:16px var(--body);outline:none;
+  }
+  input:focus,textarea:focus{border-color:var(--bronze)}
+  textarea{min-height:120px;resize:vertical}
+  .error{color:#f0a3a3;font-size:13px;min-height:18px;text-align:center}
+  .tick{width:64px;height:64px;border-radius:50%;border:1.5px solid var(--bronze);display:grid;place-items:center;margin:6px auto 20px;color:var(--bronze-light)}
+  .tick svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .foot{margin-top:28px;font-size:12px;color:rgba(244,237,228,.4)}
+  .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="logo"><b>B&amp;U NATURAL HAIR</b><span>PREMIUM HUMAN HAIR VENDOR</span></div>
+
+  <!-- 1. Rating -->
+  <section class="screen active" id="screenRate">
+    <span class="eyebrow">Your feedback</span>
+    <h1>How was your experience with us?</h1>
+    <p class="sub">Tap a star to rate your hair and service. It takes less than a minute.</p>
+    <div class="stars" id="stars" role="radiogroup" aria-label="Rating out of 5"></div>
+    <div class="hint" id="hint" aria-live="polite"></div>
+  </section>
+
+  <!-- 2a. 4-5 stars: Google -->
+  <section class="screen" id="screenGoogle">
+    <div class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <span class="eyebrow">Thank you</span>
+    <h1>We’re so glad you love it</h1>
+    <p class="sub">Would you share that on Google? It helps other customers find us and means the world to a small business.</p>
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="sub" style="font-size:13px">Taking you to Google…</p>
+    <p style="margin-top:20px"><a class="btn" id="googleBtn" href="#" rel="noopener">Leave a Google review</a></p>
+  </section>
+
+  <!-- 2b. 1-3 stars: private feedback -->
+  <section class="screen" id="screenFeedback">
+    <span class="eyebrow">We’re listening</span>
+    <h1>Tell us how we can do better</h1>
+    <p class="sub">We’re sorry we missed the mark. Your message goes straight to the owner and we’ll personally make it right.</p>
+    <form id="feedbackForm" novalidate>
+      <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label>Your name<input name="name" required autocomplete="name"></label>
+      <label>Phone or email <small>so we can reach you</small><input name="contact" required autocomplete="email"></label>
+      <label>What went wrong?<textarea name="message" required placeholder="Tell us what happened…"></textarea></label>
+      <div class="error" id="formError" role="alert"></div>
+      <button class="btn btn-block" id="sendBtn" type="submit">Send feedback</button>
+    </form>
+  </section>
+
+  <!-- 3. Thanks -->
+  <section class="screen" id="screenThanks">
+    <div class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <span class="eyebrow">Received</span>
+    <h1>Thank you for telling us</h1>
+    <p class="sub">Your feedback has been sent to the owner. We’ll reach out to you soon.</p>
+  </section>
+
+  <div class="foot">© 2026 B&amp;U Natural Hair</div>
+</main>
+
+<script>
+  /* ================= SETTINGS ================= */
+  // Google review link for B&U Natural Hair (built from the Maps listing's Place ID).
+  const GOOGLE_REVIEW_URL = 'https://search.google.com/local/writereview?placeid=ChIJ_4DDR2Y5P6sRAY3jJpeiYgM';
+
+  // The inbox that receives 1-3 star feedback. Put your email here, e.g. 'owner@gmail.com'
+  const FEEDBACK_EMAIL = '';
+
+  // Fallback if no email is set above: feedback is sent to this WhatsApp number instead.
+  const WA_NUMBER = '2349097793955';
+
+  const REDIRECT_DELAY_MS = 2500;   // wait before sending 4-5 star customers to Google
+  const GOOD_RATING = 4;            // this rating and above goes to Google
+  /* ============================================ */
+
+  const $ = id => document.getElementById(id);
+  const labels = ['Poor','Fair','Good','Great','Excellent'];
+  let rating = 0, locked = false;
+
+  const starSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.4l2.9 6.1 6.7.9-4.9 4.6 1.2 6.6L12 17.4l-5.9 3.2 1.2-6.6L2.4 9.4l6.7-.9z"/></svg>';
+  const wrap = $('stars');
+  for (let i = 1; i <= 5; i++) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'star'; b.dataset.v = i;
+    b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', 'false');
+    b.setAttribute('aria-label', i + ' star' + (i > 1 ? 's' : '') + ', ' + labels[i - 1]);
+    b.innerHTML = starSvg;
+    wrap.appendChild(b);
+  }
+  const stars = [...wrap.children];
+
+  function paint(n) {
+    stars.forEach((s, i) => s.classList.toggle('on', i < n));
+    $('hint').textContent = n ? labels[n - 1] : '';
+  }
+  stars.forEach(s => {
+    s.addEventListener('mouseenter', () => { if (!locked) paint(+s.dataset.v); });
+    s.addEventListener('focus', () => { if (!locked) paint(+s.dataset.v); });
+    s.addEventListener('click', () => choose(+s.dataset.v));
+  });
+  wrap.addEventListener('mouseleave', () => { if (!locked) paint(rating); });
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    $(id).classList.add('active');
+  }
+
+  function choose(n) {
+    if (locked) return;
+    locked = true; rating = n;
+    stars.forEach((s, i) => s.setAttribute('aria-checked', i + 1 === n ? 'true' : 'false'));
+    paint(n);
+    setTimeout(() => n >= GOOD_RATING ? goGoogle() : goFeedback(), 450);
+  }
+
+  function goGoogle() {
+    show('screenGoogle');
+    $('googleBtn').href = GOOGLE_REVIEW_URL;
+    setTimeout(() => { window.location.href = GOOGLE_REVIEW_URL; }, REDIRECT_DELAY_MS);
+  }
+
+  function goFeedback() {
+    show('screenFeedback');
+    $('feedbackForm').elements.name.focus({ preventScroll: true });
+  }
+
+  $('feedbackForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = e.target, err = $('formError'), btn = $('sendBtn');
+    err.textContent = '';
+    if (f.elements._honey.value) return;               // bot trap
+    const data = {
+      name: f.elements.name.value.trim(),
+      contact: f.elements.contact.value.trim(),
+      message: f.elements.message.value.trim()
+    };
+    if (!data.name || !data.contact || !data.message) {
+      err.textContent = 'Please fill in all three fields so we can help you.'; return;
+    }
+
+    btn.disabled = true; btn.textContent = 'Sending…';
+
+    // No email configured: fall back to WhatsApp so feedback is never lost.
+    if (!FEEDBACK_EMAIL) {
+      const text = `Private feedback (${rating}/5 stars)\n\nName: ${data.name}\nContact: ${data.contact}\n\n${data.message}`;
+      window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+      show('screenThanks'); return;
+    }
+
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(FEEDBACK_EMAIL), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: `${rating}-star feedback from ${data.name} | B&U Natural Hair`,
+          _template: 'table',
+          _captcha: 'false',
+          Rating: `${rating} / 5`,
+          Name: data.name,
+          Contact: data.contact,
+          Message: data.message
+        })
+      });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok || out.success === 'false') throw new Error('send failed');
+      show('screenThanks');
+    } catch (ex) {
+      err.textContent = 'Something went wrong. Please check your connection and try again.';
+      btn.disabled = false; btn.textContent = 'Send feedback';
+    }
+  });
+</script>
+</body>
+</html>
